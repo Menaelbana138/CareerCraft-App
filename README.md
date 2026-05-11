@@ -4,7 +4,7 @@
 
 **AI-powered career path & skill gap analysis platform**
 
-![Laravel](https://img.shields.io/badge/Laravel-9.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-%5E9.19-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
@@ -15,7 +15,7 @@
 
 ## 📌 عن المشروع
 
-CareerCraft هو باك إند REST API مبني بـ **Laravel 9 + Sanctum** لتطبيق موبايل Flutter.
+CareerCraft هو باك إند REST API مبني بـ **Laravel ^9.19 + Sanctum** لتطبيق موبايل Flutter.
 يوفر المنصة تحليل مسارات مهنية، كشف فجوات المهارات، ومطابقة الوظائف بالذكاء الاصطناعي.
 
 ---
