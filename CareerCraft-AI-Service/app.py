@@ -9,6 +9,7 @@ from flask import Flask, request, jsonify
 import numpy as np
 from typing import Dict, List
 import random
+import os
 
 app = Flask(__name__)
 
@@ -613,6 +614,25 @@ def do_gap_analysis(user_skills, job_data):
 # ENDPOINTS
 # ══════════════════════════════════════════════════════════
 
+@app.route("/", methods=["GET"])
+def index():
+    return jsonify({
+        "service": "CareerCraft AI Service",
+        "status": "running",
+        "version": "1.0.0",
+        "dataset": {
+            "skills": len(SKILL_CATALOG),
+            "job_roles": len(JOB_ROLES),
+            "courses": len(COURSE_CATALOG)
+        },
+        "endpoints": {
+            "GET":  ["/", "/health", "/skills/categories"],
+            "POST": ["/career-recommendations", "/job-match", "/advice",
+                     "/suggested-skills", "/resume-review", "/interview-simulate",
+                     "/salary-benchmark", "/chatbot"]
+        }
+    }), 200
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({
@@ -834,4 +854,5 @@ def chatbot():
                     "zaki": True, "dataset_info": {"skills": len(SKILL_CATALOG), "roles": len(JOB_ROLES)}}), 200
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
