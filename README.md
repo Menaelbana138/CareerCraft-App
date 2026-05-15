@@ -55,6 +55,22 @@ php artisan serve
 
 ---
 
+## 🚀 Production URLs
+
+- **Backend API:** https://careercraft-app-production.up.railway.app
+- **AI Service:** https://careercraft-ai-service-production.up.railway.app
+
+## 🗄️ Database
+
+- **Provider:** Aiven MySQL
+- **Host:** mysql-12189bfc-mena94502-75c9.h.aivencloud.com
+- **Port:** 23321
+- **Database:** defaultdb
+
+> **ملاحظة:** لا تُرفع اسم المستخدم أو كلمة المرور في الـ README؛ استخدم متغيرات البيئة أو Railway Secrets فقط.
+
+---
+
 ## 🚀 Production Checklist
 
 | المهمة | الأمر |
