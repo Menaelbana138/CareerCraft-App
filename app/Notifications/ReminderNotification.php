@@ -10,10 +10,15 @@ class ReminderNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(
-        public readonly string $message,
-        public readonly string $title = 'CareerCraft — Daily Reminder'
-    ) {}
+    protected string $message;
+
+    protected string $title;
+
+    public function __construct(string $message, string $title = 'CareerCraft — Daily Reminder')
+    {
+        $this->message = $message;
+        $this->title = $title;
+    }
 
     public function via(object $notifiable): array
     {

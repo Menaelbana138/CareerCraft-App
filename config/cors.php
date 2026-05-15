@@ -4,22 +4,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cross-Origin Resource Sharing (CORS) Configuration
+    | CORS — CareerCraft Backend
     |--------------------------------------------------------------------------
-    |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    |
+    | CORS_ALLOWED_ORIGINS: قائمة مفصولة بفواصل، مثال:
+    |   https://your-app.vercel.app,https://www.example.com
+    | لو المتغير غير موجود أو فاضي → يُعامل كـ * (مناسب للتطوير؛ قيّدي في الإنتاج).
+    | تطبيقات الموبايل الأصلية لا تستخدم CORS في المتصفح.
     */
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => array_values(array_filter(array_map(
+        'trim',
+        explode(',', (string) (env('CORS_ALLOWED_ORIGINS') ?: '*'))
+    ))),
 
     'allowed_origins_patterns' => [],
 

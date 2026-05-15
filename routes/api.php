@@ -103,13 +103,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/notifications', [NotificationController::class, 'index']);
         Route::get('/user/report', [ReportController::class, 'careerReport']);
 
-        // AI endpoints (require OPENAI_API_KEY for full functionality)
-        Route::get('/ai/career-recommendations', [AiController::class, 'careerRecommendations']);
-        Route::get('/ai/job-match/{jobId}', [AiController::class, 'jobMatch']);
-        Route::post('/ai/advice', [AiController::class, 'advice']);
-        Route::get('/ai/suggested-skills', [AiController::class, 'suggestedSkills']);
-        Route::post('/ai/resume-review', [AiController::class, 'resumeReview']);
-        Route::post('/ai/interview-simulate', [AiController::class, 'interviewSimulate']);
+        // AI endpoints — throttle 20 req/min per user/IP (stack with global api limiter)
+        Route::middleware('throttle:ai')->group(function () {
+            Route::get('/ai/career-recommendations', [AiController::class, 'careerRecommendations']);
+            Route::get('/ai/job-match/{jobId}', [AiController::class, 'jobMatch']);
+            Route::post('/ai/advice', [AiController::class, 'advice']);
+            Route::get('/ai/suggested-skills', [AiController::class, 'suggestedSkills']);
+            Route::post('/ai/resume-review', [AiController::class, 'resumeReview']);
+            Route::post('/ai/interview-simulate', [AiController::class, 'interviewSimulate']);
+            Route::post('/ai/chatbot', [AiController::class, 'chatbot']);
+        });
     });
 
     // Admin APIs

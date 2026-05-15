@@ -10,12 +10,26 @@ use Illuminate\Support\Facades\Log;
 class AIService
 {
     protected ?string $internalUrl;
+    protected ?string $internalSecret;
     protected ?string $openaiKey;
 
     public function __construct()
     {
         $this->internalUrl = rtrim(config('services.ai.url', ''), '/');
+        $this->internalSecret = config('services.ai.secret');
         $this->openaiKey = config('services.openai.key');
+    }
+
+    /**
+     * Headers for every HTTP call to the internal AI service (Railway: AI_SERVICE_SECRET).
+     */
+    protected function internalHeaders(): array
+    {
+        if ($this->internalSecret === null || $this->internalSecret === '') {
+            return [];
+        }
+
+        return ['X-Internal-Key' => $this->internalSecret];
     }
 
     /**
@@ -25,7 +39,9 @@ class AIService
     {
         if (!empty($this->internalUrl)) {
             try {
-                $r = Http::timeout(5)->get($this->internalUrl . '/health');
+                $r = Http::withHeaders($this->internalHeaders())
+                    ->timeout(5)
+                    ->get($this->internalUrl . '/health');
                 return $r->successful() && ($r->json('ai_available') ?? false);
             } catch (\Throwable $e) {
                 Log::warning('AI service health check failed', ['error' => $e->getMessage()]);
@@ -116,7 +132,9 @@ class AIService
     protected function internalPost(string $path, array $body): ?array
     {
         try {
-            $r = Http::timeout(60)->post($this->internalUrl . $path, $body);
+            $r = Http::withHeaders($this->internalHeaders())
+                ->timeout(60)
+                ->post($this->internalUrl . $path, $body);
             if (!$r->successful()) {
                 Log::warning('AI service error', ['path' => $path, 'status' => $r->status()]);
                 return null;

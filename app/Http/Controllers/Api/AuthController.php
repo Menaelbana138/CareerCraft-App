@@ -37,7 +37,7 @@ class AuthController extends Controller
                 'password' => Hash::make($data['password']),
             ]);
             $token = $company->createToken('company-api')->plainTextToken;
-            return response()->json(['company' => $company, 'token' => $token], 201);
+            return response()->json(['token' => $token, 'company' => $company], 201);
         }
 
         $request->validate(['email' => ['unique:users,email']]);
@@ -47,13 +47,28 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
             'role' => 'user',
         ]);
-        $token = $user->createToken('api')->plainTextToken;
+        $token = $user->createToken('mobile')->plainTextToken;
         event(new Registered($user));
-        return response()->json(['user' => $user, 'token' => $token], 201);
+        return response()->json(['token' => $token, 'user' => $user], 201);
     }
 
     /**
      * Unified login: type = user|company
+     *
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     summary="Login and get Sanctum token",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123"),
+     *             @OA\Property(property="type", type="string", enum={"user","company"}, example="user")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Token returned"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function login(Request $request)
     {
@@ -69,7 +84,7 @@ class AuthController extends Controller
                 throw ValidationException::withMessages(['email' => ['Invalid credentials.']]);
             }
             $token = $company->createToken('company-api')->plainTextToken;
-            return response()->json(['company' => $company, 'token' => $token]);
+            return response()->json(['token' => $token, 'company' => $company]);
         }
 
         $user = User::query()->where('email', $data['email'])->first();
@@ -79,8 +94,8 @@ class AuthController extends Controller
         if ($user->suspended_at) {
             return response()->json(['message' => 'Account suspended.'], 403);
         }
-        $token = $user->createToken('api')->plainTextToken;
-        return response()->json(['user' => $user, 'token' => $token]);
+        $token = $user->createToken('mobile')->plainTextToken;
+        return response()->json(['token' => $token, 'user' => $user]);
     }
 
     public function googleLogin(Request $request, GoogleIdTokenService $google)
@@ -121,11 +136,11 @@ class AuthController extends Controller
             return response()->json(['message' => 'Account suspended.'], 403);
         }
 
-        $token = $user->createToken('api')->plainTextToken;
+        $token = $user->createToken('mobile')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
             'token' => $token,
+            'user' => $user,
         ]);
     }
 
@@ -210,6 +225,16 @@ class AuthController extends Controller
         return response()->json(['message' => __($status)]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     summary="Logout and revoke current token",
+     *     tags={"Auth"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Logged out successfully"),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function logout(Request $request)
     {
         $token = $request->user()?->currentAccessToken();
@@ -217,7 +242,7 @@ class AuthController extends Controller
             $token->delete();
         }
 
-        return response()->json(['message' => 'Logged out.']);
+        return response()->json(['message' => 'Logged out']);
     }
 }
 

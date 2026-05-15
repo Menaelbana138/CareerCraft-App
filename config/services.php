@@ -44,6 +44,7 @@ return [
     'ai' => [
         'url'     => env('AI_SERVICE_URL'),
         'timeout' => env('AI_SERVICE_TIMEOUT', 30),
+        'secret'  => env('AI_SERVICE_SECRET'),
     ],
 
     /*
