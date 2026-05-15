@@ -1,4 +1,4 @@
-import 'package:device_preview/device_preview.dart';
+import 'package:device_preview/device_preview.dart' show DevicePreview;
 import 'package:flutter/material.dart';
 import 'package:graduationproject/auth/ForgetPassword/forgetpasswordPage.dart';
 import 'package:graduationproject/auth/ResetPassword/ResetPassword.dart';

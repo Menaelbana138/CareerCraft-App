@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show Timer;
 import 'package:flutter/material.dart';
 import 'package:graduationproject/features/welcomePage/welcompage_boy.dart';
 
@@ -14,7 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // ملاحظة: 12 ثانية وقت طويل جداً للـ Splash، غالباً بتكون من 2 لـ 4 ثواني
     Timer(const Duration(seconds: 12), () {
       if (mounted) {
         // للتأكد إن الصفحة لسه موجودة قبل الانتقال
